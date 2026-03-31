@@ -117,12 +117,12 @@ export default function Analytics() {
             <div className="text-2xl font-bold text-gray-900">50,000</div>
             <div className="text-sm text-gray-500 uppercase tracking-wide">Installs</div>
           </div>
-          <div className="hidden md:block w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 absolute left-1/3 -ml-4 z-10">&rarr;</div>
+          <div className=" md:block w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 absolute left-1/3 -ml-4 z-10">&rarr;</div>
           <div className="w-full md:w-1/3 p-4 bg-gray-50 rounded-lg">
             <div className="text-2xl font-bold text-gray-900">22,000</div>
             <div className="text-sm text-gray-500 uppercase tracking-wide">Sign-ups (44%)</div>
           </div>
-          <div className="hidden md:block w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 absolute left-2/3 -ml-4 z-10">&rarr;</div>
+          <div className=" md:block w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 absolute left-2/3 -ml-4 z-10">&rarr;</div>
           <div className="w-full md:w-1/3 p-4 bg-[#C4963D]/10 rounded-lg border border-[#C4963D]/20">
             <div className="text-2xl font-bold text-[#C4963D]">4,070</div>
             <div className="text-sm text-[#C4963D] uppercase tracking-wide">Subscriptions (18.5%)</div>

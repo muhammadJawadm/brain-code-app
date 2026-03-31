@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { FileAudio, FileVideo, FileText, ListTree, Target, UploadCloud, Edit3, Trash2, Plus, Bold, Italic, Heading1, Heading2, List, ListOrdered } from 'lucide-react';
+import { FileAudio, FileVideo, FileText, Target, UploadCloud, Edit3, Trash2, Plus, Bold, Italic, Heading1, Heading2, List, ListOrdered, Image as ImageIcon, X } from 'lucide-react';
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -48,13 +49,27 @@ const MenuBar = ({ editor }) => {
       >
         <ListOrdered size={16} />
       </button>
+      <div className="w-px h-4 bg-gray-300 mx-1"></div>
+      <button
+        onClick={() => {
+           // For full implementation, use tiptap image extension and standard upload logic
+           alert("Image upload dialog would open here.");
+        }}
+        className="p-1.5 rounded hover:bg-gray-100 text-gray-600"
+        title="Add Image"
+      >
+        <ImageIcon size={16} />
+      </button>
     </div>
   );
 };
 
 export default function Content() {
   const [activeTab, setActiveTab] = useState('audio');
+  const [isProgramModalOpen, setIsProgramModalOpen] = useState(false);
   
+  const categories = ['Focus', 'Sleep', 'Energy', 'Anxiety', 'Meditation'];
+
   const editor = useEditor({
     extensions: [StarterKit],
     content: '<p>Start writing your rich text content here...</p>',
@@ -69,7 +84,6 @@ export default function Content() {
     { id: 'audio', label: 'Audio', icon: <FileAudio size={16} className="mr-2"/> },
     { id: 'video', label: 'Video', icon: <FileVideo size={16} className="mr-2"/> },
     { id: 'text', label: 'Text Pages', icon: <FileText size={16} className="mr-2"/> },
-    { id: 'categories', label: 'Categories', icon: <ListTree size={16} className="mr-2"/> },
     { id: 'programs', label: 'Programs', icon: <Target size={16} className="mr-2"/> },
   ];
 
@@ -112,12 +126,37 @@ export default function Content() {
             </div>
             
             {/* Upload Area */}
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer mb-8">
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer mb-6">
                <div className="bg-white p-3 rounded-full shadow-sm mb-3">
                   <UploadCloud size={24} className="text-[#C4963D]" />
                </div>
                <p className="text-sm font-medium text-gray-900">Click to upload or drag and drop</p>
                <p className="text-xs text-gray-500 mt-1">MP3, WAV, or AAC up to 50MB</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#C4963D]/50 focus:border-[#C4963D] outline-none transition-all">
+                  <option value="">Select a category</option>
+                  {categories.map((cat, index) => (
+                    <option key={index} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Goal / Objective</label>
+                <input type="text" placeholder="e.g., Improve deep sleep, Reduce stress..." className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#C4963D]/50 focus:border-[#C4963D] outline-none transition-all" />
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Audio Description</label>
+              <textarea 
+                rows="3" 
+                placeholder="Enter a brief description for this audio session..." 
+                className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#C4963D]/50 focus:border-[#C4963D] outline-none transition-all resize-none"
+              ></textarea>
             </div>
 
             {/* List */}
@@ -157,12 +196,37 @@ export default function Content() {
             </div>
 
             {/* Upload Area */}
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer mb-8">
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer mb-6">
                <div className="bg-white p-3 rounded-full shadow-sm mb-3">
                   <UploadCloud size={24} className="text-indigo-500" />
                </div>
                <p className="text-sm font-medium text-gray-900">Click to upload or drag and drop</p>
                <p className="text-xs text-gray-500 mt-1">MP4 or MOV up to 500MB</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all">
+                  <option value="">Select a category</option>
+                  {categories.map((cat, index) => (
+                    <option key={index} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Goal / Objective</label>
+                <input type="text" placeholder="e.g., Guide for healthy eating, Improve posture..." className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" />
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Video Description</label>
+              <textarea 
+                rows="3" 
+                placeholder="Enter a brief description for this video lesson..." 
+                className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all resize-none"
+              ></textarea>
             </div>
 
             {/* Grid for videos */}
@@ -198,6 +262,22 @@ export default function Content() {
               </div>
 
               <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <select className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#C4963D]/50 focus:border-[#C4963D] outline-none transition-all">
+                      <option value="">Select a category</option>
+                      {categories.map((cat, index) => (
+                        <option key={index} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Goal / Objective</label>
+                    <input type="text" placeholder="e.g., Deepen understanding, Inform technique..." className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#C4963D]/50 focus:border-[#C4963D] outline-none transition-all" />
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Page Title</label>
                   <input type="text" placeholder="Entering the Alpha State" className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#C4963D]/50 focus:border-[#C4963D] outline-none transition-all" />
@@ -279,7 +359,10 @@ export default function Content() {
                   <h3 className="text-lg font-bold text-gray-900">Programs & Challenges</h3>
                   <p className="text-gray-500 text-sm mt-1">Define unlock logic, order content, and set milestones.</p>
                </div>
-               <button className="bg-purple-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-purple-700 flex items-center transition-all">
+               <button 
+                onClick={() => setIsProgramModalOpen(true)}
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-purple-700 flex items-center transition-all"
+               >
                  <Plus size={18} className="mr-2"/> Build Program
                </button>
             </div>
@@ -303,6 +386,98 @@ export default function Content() {
           </div>
         )}
       </div>
+
+      {/* --- BUILD PROGRAM MODAL --- */}
+      {isProgramModalOpen && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl max-h-[90vh] overflow-y-auto w-full">
+            <div className="flex justify-between items-center p-6 border-b border-gray-100">
+              <h2 className="text-xl font-bold text-gray-900">Build New Program</h2>
+              <button 
+                onClick={() => setIsProgramModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+               >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Program Title</label>
+                <input type="text" placeholder="e.g., 30-Day Sleep Mastery" className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none transition-all" />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                  <select className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none transition-all">
+                    <option value="">Select a category</option>
+                    {categories.map((cat, index) => (
+                      <option key={index} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Goal / Objective</label>
+                  <input type="text" placeholder="e.g., Build consistent sleep habits..." className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none transition-all" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Program Description</label>
+                <textarea 
+                  rows="3" 
+                  placeholder="Describe the program..." 
+                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 outline-none transition-all resize-none"
+                ></textarea>
+              </div>
+
+              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50/50">
+                <h3 className="font-semibold text-gray-800 mb-3 border-b border-gray-200 pb-2">Program Content Details</h3>
+                <p className="text-sm text-gray-500 mb-4">Attach relevant content files (Optional)</p>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Add Audio Session</label>
+                    <div className="flex bg-white items-center border border-gray-300 rounded-lg px-3 py-2">
+                       <FileAudio size={18} className="text-gray-400 mr-2" />
+                       <input type="file" accept="audio/*" className="w-full text-sm text-gray-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Add Video Lesson</label>
+                    <div className="flex bg-white items-center border border-gray-300 rounded-lg px-3 py-2">
+                       <FileVideo size={18} className="text-gray-400 mr-2" />
+                       <input type="file" accept="video/*" className="w-full text-sm text-gray-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Add Text Resource / Document</label>
+                    <div className="flex bg-white items-center border border-gray-300 rounded-lg px-3 py-2">
+                       <FileText size={18} className="text-gray-400 mr-2" />
+                       <input type="file" accept=".pdf,.doc,.docx,.txt" className="w-full text-sm text-gray-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-3">
+              <button 
+                onClick={() => setIsProgramModalOpen(false)}
+                className="px-5 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+              >
+                Cancel
+              </button>
+              <button className="px-5 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 shadow-sm transition-all">
+                Save Program
+              </button>
+            </div>
+          </div>
+        </div>, document.body
+      )}
     </div>
   );
 }

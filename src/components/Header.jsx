@@ -37,7 +37,7 @@ export default function Header({ onMenuClick }) {
   const userInitials = currentUsername.charAt(0).toUpperCase();
 
   return (
-    <div className="sticky top-0 z-40">
+    <div className="sticky top-0 z-10">
       <header
         className="h-16 flex items-center justify-between px-3 sm:px-6 gap-3 bg-white border-b border-gray-200"
       >

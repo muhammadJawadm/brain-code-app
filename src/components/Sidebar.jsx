@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import {
   LayoutDashboard, ShieldCheck, Gavel, CreditCard,
   Building2, BarChart3, FileWarning, ChevronLeft,
-  ChevronRight, LogOut, Settings, X, Bell, Users, FileVideo, Music
+  ChevronRight, LogOut, Settings, X, Bell, Users, FileVideo, Music, MessageSquare
 } from "lucide-react"
 import logo from "../assets/Logo.png"
 import { useAuth } from "../context/AuthContext"
@@ -15,6 +15,7 @@ const NAV = [
   { icon: BarChart3, label: "Analytics", path: "/analytics", roles: ['Admin'] },
   { icon: ShieldCheck, label: "Privacy & Data", path: "/privacy", roles: ['Admin'] },
   { icon: CreditCard, label: "Subscriptions", path: "/subscriptions", roles: ['Admin'] },
+  { icon: MessageSquare, label: "Help & Support", path: "/support", roles: ['Admin', 'Support'] },
   { icon: Bell, label: "Notifications", path: "/notifications", roles: ['Admin'] },
 ]
 

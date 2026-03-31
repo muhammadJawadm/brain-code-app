@@ -9,6 +9,7 @@ import Content from './pages/Content'
 import Analytics from './pages/Analytics'
 import Privacy from './pages/Privacy'
 import Subscriptions from './pages/Subscriptions'
+import Support from './pages/Support'
 import Settings from './pages/Settings'
 import Notifications from './pages/Notifications'
 import Login from './pages/Login'
@@ -70,6 +71,7 @@ export default function App() {
             <Route path="/analytics" element={<ProtectedRoute allowedRoles={['Admin']} component={Analytics} />} />
             <Route path="/privacy" element={<ProtectedRoute allowedRoles={['Admin']} component={Privacy} />} />
             <Route path="/subscriptions" element={<ProtectedRoute allowedRoles={['Admin']} component={Subscriptions} />} />
+            <Route path="/support" element={<ProtectedRoute allowedRoles={['Admin', 'Support']} component={Support} />} />
             <Route path="/notifications" element={<ProtectedRoute allowedRoles={['Admin']} component={Notifications} />} />
             <Route path="/settings" element={<ProtectedRoute allowedRoles={['Admin']} component={Settings} />} />
           </Route>
