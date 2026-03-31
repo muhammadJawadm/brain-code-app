@@ -12,7 +12,7 @@ export default function ProtectedRoute({ allowedRoles, component: Component }) {
   if (allowedRoles && !hasAccess(allowedRoles)) {
     // If user doesn't have required role, redirect them to a safe default page based on their role
     if (user.role === 'Editor') return <Navigate to="/content" replace />;
-    if (user.role === 'Support') return <Navigate to="/users" replace />;
+    if (user.role === 'Support') return <Navigate to="/support" replace />;
     return <Navigate to="/dashboard" replace />;
   }
 
