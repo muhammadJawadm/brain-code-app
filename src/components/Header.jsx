@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext"
 const PAGE_INFO = {
   "/dashboard":    { title: "Dashboard",           sub: "Welcome back" },
   "/users":        { title: "User Management",     sub: "Manage accounts and access" },
+  "/companies":    { title: "Company Management",  sub: "Manage B2B companies, departments and employees" },
   "/content":      { title: "Content Management",  sub: "Manage audio, video and text lessons" },
   "/subscriptions":{ title: "Subscriptions",       sub: "Track revenue and active trials" },
   "/notifications":{ title: "Push Notifications",  sub: "Engage your user base" },
@@ -21,7 +22,11 @@ export default function Header({ onMenuClick }) {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuth()
-  const page = PAGE_INFO[pathname] || { title: "Admin", sub: "" }
+  const page =
+    PAGE_INFO[pathname] ||
+    (pathname.startsWith("/companies/")
+      ? { title: "Company Detail", sub: "Company-level management and analytics" }
+      : { title: "Admin", sub: "" })
   const [open, setOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)

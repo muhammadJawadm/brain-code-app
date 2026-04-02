@@ -13,6 +13,8 @@ import Support from './pages/Support'
 import Settings from './pages/Settings'
 import Notifications from './pages/Notifications'
 import Login from './pages/Login'
+import Companies from './pages/Companies'
+import CompanyDetail from './pages/CompanyDetail'
 
 function AdminLayout({ children }) {
   // collapsed only matters on desktop (md+); on mobile sidebar is hidden via transform
@@ -73,6 +75,8 @@ export default function App() {
             <Route path="/subscriptions" element={<ProtectedRoute allowedRoles={['Admin']} component={Subscriptions} />} />
             <Route path="/support" element={<ProtectedRoute allowedRoles={['Admin', 'Support']} component={Support} />} />
             <Route path="/notifications" element={<ProtectedRoute allowedRoles={['Admin']} component={Notifications} />} />
+            <Route path="/companies" element={<ProtectedRoute allowedRoles={['Admin']} component={Companies} />} />
+            <Route path="/companies/:companyId" element={<ProtectedRoute allowedRoles={['Admin']} component={CompanyDetail} />} />
             <Route path="/settings" element={<ProtectedRoute allowedRoles={['Admin']} component={Settings} />} />
           </Route>
 

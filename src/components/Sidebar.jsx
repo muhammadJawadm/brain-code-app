@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext"
 const NAV = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", roles: ['Admin'] },
   { icon: Users, label: "User Management", path: "/users", roles: ['Admin', 'Support'] },
+  { icon: Building2, label: "Company Management", path: "/companies", roles: ['Admin'] },
   { icon: FileVideo, label: "Content", path: "/content", roles: ['Admin', 'Editor'] },
   { icon: BarChart3, label: "Analytics", path: "/analytics", roles: ['Admin'] },
   { icon: ShieldCheck, label: "Privacy & Data", path: "/privacy", roles: ['Admin'] },
