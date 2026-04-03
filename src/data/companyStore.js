@@ -126,6 +126,23 @@ export function getCompanyById(companyId) {
 
 export function addCompany(payload) {
   const base = getCompanies()
+  const normalizedDepartmentNames = Array.isArray(payload.departments)
+    ? Array.from(
+        new Set(
+          payload.departments
+            .map((department) => (typeof department === "string" ? department.trim() : ""))
+            .filter(Boolean)
+        )
+      )
+    : []
+
+  const departments = normalizedDepartmentNames.map((name, index) => ({
+    id: `dep-${Date.now()}-${index + 1}`,
+    name,
+    head: "TBD",
+    employeeCount: 0,
+  }))
+
   const nextCompany = {
     id: `cmp-${Date.now()}`,
     name: payload.name,
@@ -142,7 +159,7 @@ export function addCompany(payload) {
       { name: "May", activeEmployees: 0, sessions: 0 },
       { name: "Jun", activeEmployees: 0, sessions: 0 },
     ],
-    departments: [],
+    departments,
     employees: [],
   }
 

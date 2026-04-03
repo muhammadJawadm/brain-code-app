@@ -11,17 +11,81 @@ const statusStyles = {
 
 const metricTileBase = "bg-white p-4 rounded-lg shadow-sm border border-gray-100"
 
+const asOptions = (items) => items.map((item) => ({ value: item, label: item }))
+
+const MultiSelectChips = ({ title, options, selected, onChange }) => {
+  const handleToggle = (value) => {
+    if (selected.includes(value)) {
+      onChange(selected.filter((item) => item !== value))
+      return
+    }
+
+    onChange([...selected, value])
+  }
+
+  return (
+    <div>
+      <label className="block text-xs font-medium text-gray-700 mb-1">{title}</label>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option) => {
+          const active = selected.includes(option.value)
+          return (
+            <button
+              type="button"
+              key={option.value}
+              onClick={() => handleToggle(option.value)}
+              className={`px-2.5 py-1 rounded-full text-xs border transition-colors ${
+                active
+                  ? "bg-[#C4963D]/15 text-[#8A6422] border-[#C4963D]/30"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+              }`}
+            >
+              {option.label}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default function Companies() {
   const [companies, setCompanies] = useState([])
   const [query, setQuery] = useState("")
+  const [customDepartmentOption, setCustomDepartmentOption] = useState("")
+  const [customDepartmentOptions, setCustomDepartmentOptions] = useState([])
   const [form, setForm] = useState({
     name: "",
-    industry: "",
+    departments: [],
+    plan: "Growth",
+    status: "Active",
+    avgEngagement: 70,
   })
 
   useEffect(() => {
     setCompanies(getCompanies())
   }, [])
+
+  const departmentOptions = useMemo(() => {
+    const fromCompanies = companies.flatMap((company) =>
+      (company.departments || []).map((department) => department?.name).filter(Boolean)
+    )
+
+    return Array.from(
+      new Set([
+        ...fromCompanies,
+        "Engineering",
+        "Operations",
+        "HR",
+        "Sales",
+        "Finance",
+        "Marketing",
+        "Support",
+        "Product",
+        ...customDepartmentOptions,
+      ])
+    )
+  }, [companies, customDepartmentOptions])
 
   const filtered = useMemo(() => {
     const search = query.trim().toLowerCase()
@@ -30,7 +94,9 @@ export default function Companies() {
     }
 
     return companies.filter((company) => {
-      return [company.name, company.industry, company.plan, company.status]
+      const departmentsText = (company.departments || []).map((department) => department.name).join(" ")
+
+      return [company.name, company.industry, company.plan, company.status, departmentsText]
         .join(" ")
         .toLowerCase()
         .includes(search)
@@ -56,7 +122,7 @@ export default function Companies() {
 
     const created = addCompany({
       name: form.name.trim(),
-      industry: form.industry.trim(),
+      departments: form.departments,
       plan: form.plan,
       status: form.status,
       avgEngagement: Number(form.avgEngagement) || 65,
@@ -65,10 +131,36 @@ export default function Companies() {
     setCompanies((prev) => [created, ...prev])
     setForm({
       name: "",
-      industry: "",
+      departments: [],
       plan: "Growth",
       status: "Active",
       avgEngagement: 70,
+    })
+  }
+
+  const onAddDepartmentOption = () => {
+    const nextOption = customDepartmentOption.trim()
+    if (!nextOption) {
+      return
+    }
+
+    const alreadyExists = departmentOptions.some((option) => option.toLowerCase() === nextOption.toLowerCase())
+    if (!alreadyExists) {
+      setCustomDepartmentOptions((prev) => [...prev, nextOption])
+    }
+
+    setCustomDepartmentOption("")
+
+    setForm((prev) => {
+      const hasDepartment = prev.departments.some((department) => department.toLowerCase() === nextOption.toLowerCase())
+      if (hasDepartment) {
+        return prev
+      }
+
+      return {
+        ...prev,
+        departments: [...prev.departments, nextOption],
+      }
     })
   }
 
@@ -186,14 +278,29 @@ export default function Companies() {
               placeholder="Nova Group"
             />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Industry</label>
-            <input
-              type="text"
-              value={form.industry}
-              onChange={(event) => setForm((prev) => ({ ...prev, industry: event.target.value }))}
-              className="w-full border p-2 rounded-md"
-              placeholder="Fintech"
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={customDepartmentOption}
+                onChange={(event) => setCustomDepartmentOption(event.target.value)}
+                className="w-full border p-2 rounded-md"
+                placeholder="Add option (e.g. Compliance)"
+              />
+              <button
+                type="button"
+                onClick={onAddDepartmentOption}
+                className="px-3 py-2 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Add
+              </button>
+            </div>
+
+            <MultiSelectChips
+              title="Departments"
+              options={asOptions(departmentOptions)}
+              selected={form.departments}
+              onChange={(value) => setForm((prev) => ({ ...prev, departments: value }))}
             />
           </div>
           
