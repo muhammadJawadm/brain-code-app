@@ -6,7 +6,7 @@ import { addUser, getUsers, updateUserStatus } from "../data/userStore"
 const allCategories = ["Focus", "Sleep", "Energy", "Anxiety", "Meditation"]
 const allPrograms = ["30-Day Sleep Mastery", "5-Day Focus Sprint", "21-Day Anxiety Reset"]
 const allContentTypes = ["Audio", "Video", "Text", "PDF", "Images"]
-const allFeatures = ["AI Mentor", "Programs", "Progress Reports", "Community", "Offline Mode"]
+const allFeatures = ["AI Mentor", "Programs", "Add library", "Mood Tracker", "Offline Mode"]
 
 const statusClasses = {
   Active: "bg-green-100 text-green-800",
@@ -65,10 +65,8 @@ export default function Users() {
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
-    model: "B2C",
     companyId: "",
     department: "",
-    segment: "",
     categories: [],
     assignedPrograms: [],
     contentTypes: [],
@@ -150,7 +148,7 @@ export default function Users() {
       companyId: newUser.model === "B2B" ? newUser.companyId || null : null,
       companyName: newUser.model === "B2B" ? selectedCompany?.name || "Unassigned Company" : "Direct Consumer",
       department: newUser.model === "B2B" ? newUser.department || "General" : "Individual",
-      segment: newUser.segment || (newUser.model === "B2B" ? "General" : "Direct"),
+      
       access: {
         categories: newUser.categories,
         contentTypes: newUser.contentTypes,
@@ -177,10 +175,8 @@ export default function Users() {
     setNewUser({
       name: "",
       email: "",
-      model: "B2C",
       companyId: "",
       department: "",
-      segment: "",
       categories: [],
       assignedPrograms: [],
       contentTypes: [],
@@ -350,35 +346,24 @@ export default function Users() {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
+       <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Company</label>
+            <input
+              type="text"
+              value={newUser.company}
+              onChange={(event) => setNewUser((prev) => ({ ...prev, company: event.target.value }))}
+              className="w-full border p-2 rounded-md"
+            />
+          </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">User Model</label>
-              <select
-                value={newUser.model}
-                onChange={(event) =>
-                  setNewUser((prev) => ({
-                    ...prev,
-                    model: event.target.value,
-                    companyId: "",
-                    department: "",
-                    segment: "",
-                  }))
-                }
-                className="w-full border p-2 rounded-md bg-gray-50"
-              >
-                <option value="B2C">B2C</option>
-                <option value="B2B">B2B</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Segment</label>
-              <input
-                type="text"
-                value={newUser.segment}
-                onChange={(event) => setNewUser((prev) => ({ ...prev, segment: event.target.value }))}
-                className="w-full border p-2 rounded-md"
-                placeholder={newUser.model === "B2B" ? "Leadership" : "Premium"}
-              />
-            </div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Department</label>
+            <input
+              type="text"
+              value={newUser.department}
+              onChange={(event) => setNewUser((prev) => ({ ...prev, department: event.target.value }))}
+              className="w-full border p-2 rounded-md"
+            />
+          </div>
           </div>
 
           {newUser.model === "B2B" && (

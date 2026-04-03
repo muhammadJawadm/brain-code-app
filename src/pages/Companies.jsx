@@ -17,9 +17,6 @@ export default function Companies() {
   const [form, setForm] = useState({
     name: "",
     industry: "",
-    plan: "Growth",
-    status: "Active",
-    avgEngagement: 70,
   })
 
   useEffect(() => {
@@ -199,43 +196,7 @@ export default function Companies() {
               placeholder="Fintech"
             />
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Plan</label>
-              <select
-                value={form.plan}
-                onChange={(event) => setForm((prev) => ({ ...prev, plan: event.target.value }))}
-                className="w-full border p-2 rounded-md bg-gray-50"
-              >
-                <option>Starter</option>
-                <option>Growth</option>
-                <option>Enterprise</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
-              <select
-                value={form.status}
-                onChange={(event) => setForm((prev) => ({ ...prev, status: event.target.value }))}
-                className="w-full border p-2 rounded-md bg-gray-50"
-              >
-                <option>Active</option>
-                <option>Trial</option>
-                <option>Paused</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Starting Engagement (%)</label>
-            <input
-              type="number"
-              min="0"
-              max="100"
-              value={form.avgEngagement}
-              onChange={(event) => setForm((prev) => ({ ...prev, avgEngagement: event.target.value }))}
-              className="w-full border p-2 rounded-md"
-            />
-          </div>
+          
 
           <button
             onClick={onCreateCompany}

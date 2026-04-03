@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { Link, useParams } from "react-router-dom"
+import * as XLSX from "xlsx"
 import {
   Area,
   AreaChart,
@@ -14,7 +15,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { ArrowLeft, Building2, Layers3, Plus, Users } from "lucide-react"
+import { ArrowLeft, Building2, FileSpreadsheet, FileText, Layers3, Plus, Users } from "lucide-react"
 import { getCompanyById, updateCompany } from "../data/companyStore"
 
 const tabs = ["Overview", "Departments", "Employees", "Analytics"]
@@ -30,6 +31,7 @@ export default function CompanyDetail() {
   const { companyId } = useParams()
   const [company, setCompany] = useState(null)
   const [activeTab, setActiveTab] = useState("Overview")
+  const [exportScope, setExportScope] = useState("all")
 
   const [newDepartment, setNewDepartment] = useState({ name: "", head: "", employeeCount: 0 })
   const [newEmployee, setNewEmployee] = useState({ name: "", email: "", department: "", status: "Active" })
@@ -134,6 +136,162 @@ export default function CompanyDetail() {
   const activeEmployees = company.employees.filter((item) => item.status === "Active").length
   const activeRate = totalEmployees > 0 ? Math.round((activeEmployees / totalEmployees) * 100) : 0
 
+  const analyticsRows = {
+    monthlyActivity: company.monthlyActivity.map((item) => ({
+      Month: item.name,
+      "Active Employees": item.activeEmployees,
+    })),
+    departmentDistribution: company.departments.map((department) => ({
+      Department: department.name,
+      "Employee Count": department.employeeCount,
+    })),
+    statusMix: employeeStatus.map((item) => ({
+      Status: item.name,
+      Employees: item.value,
+    })),
+  }
+
+  const getExportBaseName = () => {
+    const sanitizedName = company.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+    return `${sanitizedName || "company"}-${exportScope}`
+  }
+
+  const exportAsExcel = () => {
+    const workbook = XLSX.utils.book_new()
+
+    if (exportScope === "all") {
+      XLSX.utils.book_append_sheet(
+        workbook,
+        XLSX.utils.json_to_sheet([
+          {
+            Company: company.name,
+            Industry: company.industry,
+            Plan: company.plan,
+            Status: company.status,
+            "Created At": company.createdAt,
+            "Avg Engagement": `${company.avgEngagement}%`,
+            "Total Employees": totalEmployees,
+            "Active Employees": activeEmployees,
+            "Active Employee Rate": `${activeRate}%`,
+            Departments: company.departments.length,
+          },
+        ]),
+        "Overview"
+      )
+    }
+
+    if (exportScope === "all" || exportScope === "departments") {
+      XLSX.utils.book_append_sheet(
+        workbook,
+        XLSX.utils.json_to_sheet(
+          company.departments.map((department) => ({
+            Name: department.name,
+            Head: department.head,
+            "Employee Count": department.employeeCount,
+          }))
+        ),
+        "Departments"
+      )
+    }
+
+    if (exportScope === "all" || exportScope === "employees") {
+      XLSX.utils.book_append_sheet(
+        workbook,
+        XLSX.utils.json_to_sheet(
+          company.employees.map((employee) => ({
+            Name: employee.name,
+            Email: employee.email,
+            Department: employee.department,
+            Status: employee.status,
+            "Last Seen": employee.lastSeen,
+          }))
+        ),
+        "Employees"
+      )
+    }
+
+    if (exportScope === "all" || exportScope === "analytics") {
+      XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(analyticsRows.monthlyActivity), "Monthly Activity")
+      XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(analyticsRows.departmentDistribution), "Dept Distribution")
+      XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(analyticsRows.statusMix), "Status Mix")
+    }
+
+    XLSX.writeFile(workbook, `${getExportBaseName()}.xlsx`)
+  }
+
+  const triggerWordDownload = (content) => {
+    const blob = new Blob([content], { type: "application/msword;charset=utf-8" })
+    const fileUrl = URL.createObjectURL(blob)
+    const anchor = document.createElement("a")
+    anchor.href = fileUrl
+    anchor.download = `${getExportBaseName()}.doc`
+    document.body.appendChild(anchor)
+    anchor.click()
+    document.body.removeChild(anchor)
+    URL.revokeObjectURL(fileUrl)
+  }
+
+  const exportAsWord = () => {
+    const lines = []
+
+    lines.push(`Company Report: ${company.name}`)
+    lines.push(`Generated: ${new Date().toLocaleString()}`)
+    lines.push("=".repeat(70))
+    lines.push("")
+
+    if (exportScope === "all") {
+      lines.push("OVERVIEW")
+      lines.push(`- Industry: ${company.industry}`)
+      lines.push(`- Plan: ${company.plan}`)
+      lines.push(`- Status: ${company.status}`)
+      lines.push(`- Created At: ${company.createdAt}`)
+      lines.push(`- Average Engagement: ${company.avgEngagement}%`)
+      lines.push(`- Total Employees: ${totalEmployees}`)
+      lines.push(`- Active Employee Rate: ${activeRate}%`)
+      lines.push("")
+    }
+
+    if (exportScope === "all" || exportScope === "departments") {
+      lines.push("DEPARTMENTS")
+      company.departments.forEach((department, index) => {
+        lines.push(`${index + 1}. ${department.name}`)
+        lines.push(`   Head: ${department.head}`)
+        lines.push(`   Employee Count: ${department.employeeCount}`)
+      })
+      lines.push("")
+    }
+
+    if (exportScope === "all" || exportScope === "employees") {
+      lines.push("EMPLOYEES")
+      company.employees.forEach((employee, index) => {
+        lines.push(`${index + 1}. ${employee.name} (${employee.status})`)
+        lines.push(`   Email: ${employee.email}`)
+        lines.push(`   Department: ${employee.department}`)
+        lines.push(`   Last Seen: ${employee.lastSeen}`)
+      })
+      lines.push("")
+    }
+
+    if (exportScope === "all" || exportScope === "analytics") {
+      lines.push("ANALYTICS")
+      lines.push("Monthly Activity:")
+      analyticsRows.monthlyActivity.forEach((item) => {
+        lines.push(`- ${item.Month}: ${item["Active Employees"]} active employees`)
+      })
+      lines.push("Department Distribution:")
+      analyticsRows.departmentDistribution.forEach((item) => {
+        lines.push(`- ${item.Department}: ${item["Employee Count"]} employees`)
+      })
+      lines.push("Employee Status Mix:")
+      analyticsRows.statusMix.forEach((item) => {
+        lines.push(`- ${item.Status}: ${item.Employees}`)
+      })
+      lines.push("")
+    }
+
+    triggerWordDownload(lines.join("\n"))
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -190,6 +348,37 @@ export default function CompanyDetail() {
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex flex-col md:flex-row md:items-center gap-3">
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-gray-900">Export Data</p>
+          <p className="text-xs text-gray-500">Download company data as Excel or Word. Scope includes departments, employees, analytics, or all.</p>
+        </div>
+        <select
+          value={exportScope}
+          onChange={(event) => setExportScope(event.target.value)}
+          className="border border-gray-200 bg-white rounded-md px-3 py-2 text-sm text-gray-700"
+        >
+          <option value="all">All Data</option>
+          <option value="departments">Departments</option>
+          <option value="employees">Employees</option>
+          <option value="analytics">Analytics</option>
+        </select>
+        <button
+          onClick={exportAsExcel}
+          className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-emerald-600 text-white text-sm font-medium"
+        >
+          <FileSpreadsheet className="w-4 h-4" />
+          Export Excel
+        </button>
+        <button
+          onClick={exportAsWord}
+          className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-blue-600 text-white text-sm font-medium"
+        >
+          <FileText className="w-4 h-4" />
+          Export Word
+        </button>
       </div>
 
       {activeTab === "Overview" && (
