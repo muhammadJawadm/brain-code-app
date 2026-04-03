@@ -218,7 +218,7 @@ export default function Analytics() {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+      {/* <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
         <h2 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
           <Code className="w-5 h-5 text-slate-700" />
           Google Analytics SDK Integration
@@ -238,7 +238,7 @@ export default function Analytics() {
         <pre className="text-xs bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto">
 {gaSnippet}
         </pre>
-      </div>
+      </div> */}
 
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
         <h2 className="text-lg font-medium text-gray-900 mb-4">User Funnel</h2>
