@@ -261,13 +261,22 @@ export default function Content() {
                </button>
             </div>
             
-            {/* Upload Area */}
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer mb-6">
-               <div className="bg-white p-3 rounded-full shadow-sm mb-3">
-                  <UploadCloud size={24} className="text-[#C4963D]" />
-               </div>
-               <p className="text-sm font-medium text-gray-900">Click to upload or drag and drop</p>
-               <p className="text-xs text-gray-500 mt-1">MP3, WAV, or AAC up to 50MB</p>
+            {/* Upload Areas */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                 <div className="bg-white p-3 rounded-full shadow-sm mb-3">
+                    <UploadCloud size={24} className="text-[#C4963D]" />
+                 </div>
+                 <p className="text-sm font-medium text-gray-900">Click to upload Audio</p>
+                 <p className="text-xs text-gray-500 mt-1">MP3, WAV, or AAC up to 50MB</p>
+              </div>
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                 <div className="bg-white p-3 rounded-full shadow-sm mb-3">
+                    <ImageIcon size={24} className="text-[#C4963D]" />
+                 </div>
+                 <p className="text-sm font-medium text-gray-900">Click to upload Thumbnail</p>
+                 <p className="text-xs text-gray-500 mt-1">JPG, PNG up to 5MB</p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -376,13 +385,22 @@ export default function Content() {
                </button>
             </div>
 
-            {/* Upload Area */}
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer mb-6">
-               <div className="bg-white p-3 rounded-full shadow-sm mb-3">
-                  <UploadCloud size={24} className="text-indigo-500" />
-               </div>
-               <p className="text-sm font-medium text-gray-900">Click to upload or drag and drop</p>
-               <p className="text-xs text-gray-500 mt-1">MP4 or MOV up to 500MB</p>
+            {/* Upload Areas */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                 <div className="bg-white p-3 rounded-full shadow-sm mb-3">
+                    <UploadCloud size={24} className="text-indigo-500" />
+                 </div>
+                 <p className="text-sm font-medium text-gray-900">Click to upload Video</p>
+                 <p className="text-xs text-gray-500 mt-1">MP4 or MOV up to 500MB</p>
+              </div>
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                 <div className="bg-white p-3 rounded-full shadow-sm mb-3">
+                    <ImageIcon size={24} className="text-indigo-500" />
+                 </div>
+                 <p className="text-sm font-medium text-gray-900">Click to upload Thumbnail</p>
+                 <p className="text-xs text-gray-500 mt-1">JPG, PNG up to 5MB</p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
