@@ -270,7 +270,7 @@ export default function Content() {
                <p className="text-xs text-gray-500 mt-1">MP3, WAV, or AAC up to 50MB</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                 <select className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#C4963D]/50 focus:border-[#C4963D] outline-none transition-all">
@@ -278,6 +278,18 @@ export default function Content() {
                   {categories.map((cat, index) => (
                     <option key={index} value={cat}>{cat}</option>
                   ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Mood</label>
+                <select className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#C4963D]/50 focus:border-[#C4963D] outline-none transition-all">
+                  <option value="">Select a mood</option>
+                  <option value="Happy">😊 Happy</option>
+                  <option value="Relaxed">😌 Relaxed</option>
+                  <option value="Focused">🎯 Focused</option>
+                  <option value="Energetic">⚡ Energetic</option>
+                  <option value="Calm">🧘 Calm</option>
+                  <option value="Sleepy">😴 Sleepy</option>
                 </select>
               </div>
               <div>
@@ -373,7 +385,7 @@ export default function Content() {
                <p className="text-xs text-gray-500 mt-1">MP4 or MOV up to 500MB</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                 <select className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all">
@@ -381,6 +393,18 @@ export default function Content() {
                   {categories.map((cat, index) => (
                     <option key={index} value={cat}>{cat}</option>
                   ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Mood</label>
+                <select className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all">
+                  <option value="">Select a mood</option>
+                  <option value="Happy">😊 Happy</option>
+                  <option value="Relaxed">😌 Relaxed</option>
+                  <option value="Focused">🎯 Focused</option>
+                  <option value="Energetic">⚡ Energetic</option>
+                  <option value="Calm">🧘 Calm</option>
+                  <option value="Sleepy">😴 Sleepy</option>
                 </select>
               </div>
               <div>
